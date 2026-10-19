@@ -1,65 +1,38 @@
 #!/usr/bin/env node
 /**
- * extract.mjs — transporte WordPress via REST público + parse.
+ * extract.mjs: busca um post WordPress pelo REST público e devolve a
+ * estrutura do parse-post.mjs. Transporte em lib/wp.mjs.
  *
- * REST é o caminho OFICIAL para posts, por decisão do Huxley (22/07/2026):
- *   - wordpress-mcp não expõe ability de posts (só WooCommerce/Jetpack
- *     Forms/SMTP/Akismet)
- *   - wpcom-mcp bloqueia posts.* atrás de plano Jetpack pago
- * Se um MCP com posts aparecer no futuro, ele assume o transporte e o
- * parse continua no parse-post.mjs (parser puro, contrato estável).
- *
- * Uso: node src/extract.mjs <url-do-post>
- * Saída: estrutura do parse-post.mjs.
+ * Uso: node src/extract.mjs <url-do-post> --out <dir>
+ * Imprime o JSON e, com --out, grava <dir>/<slug>/extract.json.
  */
 
+import { mkdir, writeFile } from 'node:fs/promises';
+import { join } from 'node:path';
 import { parsePost } from './parse-post.mjs';
+import { fetchPost, WpError } from './lib/wp.mjs';
 
-const WP_BASE = 'https://punkmetrics.com/wp-json/wp/v2';
+const args = process.argv.slice(2);
+const url = args.find((a) => /^https?:\/\//.test(a));
+const outIdx = args.indexOf('--out');
+const out = outIdx > -1 ? args[outIdx + 1] : null;
 
-const input = process.argv.filter((a) => a.startsWith('http'))[0];
-if (!input) {
-  console.error('Uso: node src/extract.mjs <url-do-post>');
+if (!url) {
+  console.error('Uso: node src/extract.mjs <url-do-post> --out <dir>');
   process.exit(1);
 }
 
-const slug = new URL(input).pathname.replace(/\/+$/, '').split('/').pop();
-if (!slug) {
-  console.error(`ERRO: não consegui derivar o slug de ${input}`);
+try {
+  const extraido = parsePost(await fetchPost(url));
+  const json = JSON.stringify(extraido, null, 2);
+  if (out) {
+    const dir = join(out, extraido.slug);
+    await mkdir(dir, { recursive: true });
+    await writeFile(join(dir, 'extract.json'), json + '\n');
+  }
+  console.log(json);
+} catch (e) {
+  if (!(e instanceof WpError)) throw e;
+  console.error(`ERRO: ${e.message}`);
   process.exit(1);
 }
-
-async function get(path) {
-  const res = await fetch(`${WP_BASE}${path}`);
-  if (!res.ok) throw new Error(`WP REST ${res.status} em ${path}`);
-  return res.json();
-}
-
-const posts = await get(
-  `/posts?slug=${encodeURIComponent(slug)}&_fields=id,slug,link,title,excerpt,content,categories,tags`
-);
-if (!posts.length) {
-  console.error(`ERRO: post não encontrado para slug "${slug}"`);
-  process.exit(1);
-}
-const post = posts[0];
-
-const [cats, tags] = await Promise.all([
-  post.categories.length
-    ? get(`/categories?include=${post.categories.join(',')}&_fields=id,name`)
-    : [],
-  post.tags.length ? get(`/tags?include=${post.tags.join(',')}&_fields=id,name`) : [],
-]);
-
-// normaliza para o contrato do parse-post.mjs
-const payload = {
-  title: post.title.rendered,
-  contentHtml: post.content.rendered,
-  excerpt: post.excerpt.rendered,
-  link: post.link,
-  slug: post.slug,
-  categoria: cats[0]?.name ?? null,
-  tags: tags.map((t) => t.name),
-};
-
-console.log(JSON.stringify(parsePost(payload), null, 2));
