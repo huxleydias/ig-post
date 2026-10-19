@@ -83,3 +83,19 @@ test('CLI sai com 1 e sem stack trace quando o site não responde', () => {
   assert.equal(r.status, 1);
   assert.doesNotMatch(r.stderr, /\n\s+at /);
 });
+
+test('slug que tenta sair da pasta ou injetar HTML é recusado', async () => {
+  assert.throws(() => slugFromUrl('https://ex.com/..%2F..%2Fescapou/'), WpError);
+  const b = 'https://ex.com/wp-json/wp/v2';
+  for (const ruim of ['..%2F..%2Fescapou', '%3Cimg%20src%3Dx%3E']) {
+    const f = fakeFetch({ [`${b}/posts`]: [200, [{ ...POST, slug: ruim }]], ...TAXO(b) });
+    await assert.rejects(fetchPost('https://ex.com/meu-post/', { fetch: f }), WpError, ruim);
+  }
+});
+
+test('link de post com acento volta legível para o CTA', async () => {
+  const b = 'https://ex.com/wp-json/wp/v2';
+  const f = fakeFetch({ [`${b}/posts`]: [200, [{ ...POST, link: 'https://ex.com/integra%c3%a7%c3%a3o-ia/' }]], ...TAXO(b) });
+  const p = await fetchPost('https://ex.com/meu-post/', { fetch: f });
+  assert.equal(p.link, 'https://ex.com/integração-ia/');
+});

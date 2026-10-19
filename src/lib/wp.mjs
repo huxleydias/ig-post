@@ -28,6 +28,22 @@ const decodificar = (s) => {
   }
 };
 
+// O slug vira nome de pasta e aparece no HTML do preview: nada que saia da
+// pasta de saída nem que vire tag.
+const SLUG_PROIBIDO = /[\/\\<>\0]|\.\./;
+const slugSeguro = (slug, origem) => {
+  if (!slug || SLUG_PROIBIDO.test(slug)) throw new WpError(`Slug inválido vindo de ${origem}: ${JSON.stringify(slug)}.`);
+  return slug;
+};
+
+const decodificarUrl = (u) => {
+  try {
+    return decodeURI(u);
+  } catch {
+    return u;
+  }
+};
+
 const baseDeHref = (href) => (href && !href.includes('?') ? href.replace(/\/+$/, '') + '/wp/v2' : null);
 
 export function slugFromUrl(url) {
@@ -39,7 +55,7 @@ export function slugFromUrl(url) {
   }
   const ultimo = path.replace(/\/+$/, '').split('/').pop();
   if (!ultimo) throw new WpError(`Não consegui tirar o slug de ${url}. Use a URL completa do post.`);
-  return decodificar(ultimo);
+  return slugSeguro(decodificar(ultimo), url);
 }
 
 export function discoverApiBase(html) {
@@ -118,8 +134,8 @@ export async function fetchPost(url, { fetch = globalThis.fetch } = {}) {
     title: post.title?.rendered ?? '',
     contentHtml: post.content?.rendered ?? '',
     excerpt: post.excerpt?.rendered ?? '',
-    link: post.link,
-    slug: decodificar(post.slug),
+    link: decodificarUrl(post.link),
+    slug: slugSeguro(decodificar(post.slug), host),
     categoria: cats[0]?.name ?? null,
     tags: tags.map((t) => t.name),
   };
