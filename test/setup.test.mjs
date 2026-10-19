@@ -14,10 +14,12 @@ test('CLI roda quando o plugin é chamado por um caminho com link simbólico', (
   assert.match(r.stdout, /ok: node/);
 });
 
-test('Node 20 em diante passa', () => {
-  assert.equal(nodeOk('v20.0.0'), true);
+test('Node 22.12 em diante passa, como exige o puppeteer-core', () => {
+  assert.equal(nodeOk('v22.12.0'), true);
+  assert.equal(nodeOk('v23.0.0'), true);
   assert.equal(nodeOk('v26.10.0'), true);
-  assert.equal(nodeOk('v18.19.0'), false);
+  assert.equal(nodeOk('v22.11.0'), false);
+  assert.equal(nodeOk('v20.18.0'), false);
 });
 
 test('instala quando puppeteer-core falta, inclusive depois de update do plugin', () => {

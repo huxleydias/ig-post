@@ -16,9 +16,9 @@ test('marketplace punkmetrics aponta o plugin para a raiz do repo', async () => 
   assert.equal(m.plugins.find((x) => x.name === 'ig-post').source, './');
 });
 
-test('runtime depende só de puppeteer-core e exige Node 20', async () => {
+test('runtime depende só de puppeteer-core e exige Node 22.12', async () => {
   const pkg = await read('package.json');
   assert.deepEqual(Object.keys(pkg.dependencies), ['puppeteer-core']);
-  assert.equal(pkg.engines.node, '>=20');
+  assert.equal(pkg.engines.node, '>=22.12');
   assert.equal(pkg.type, 'module');
 });

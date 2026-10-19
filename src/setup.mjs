@@ -3,7 +3,7 @@
  * setup.mjs: prepara o plugin na primeira execução de cada sessão.
  *
  * Uso: node src/setup.mjs
- *   1. Node 20 ou mais novo.
+ *   1. Node 22.12 ou mais novo (exigência do puppeteer-core).
  *   2. node_modules na raiz do plugin (npm ci --omit=dev quando falta).
  *      Fica na raiz porque import ESM resolve a partir do arquivo, não
  *      de NODE_PATH. Um update do plugin vem sem node_modules e o setup
@@ -20,9 +20,12 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { resolveChrome } from './lib/chrome.mjs';
 
+// puppeteer-core 25 declara engines node >=22.12.0.
+const MINIMO = [22, 12];
+
 export function nodeOk(version) {
-  const major = Number(String(version).replace(/^v/, '').split('.')[0]);
-  return major >= 20;
+  const [major, minor] = String(version).replace(/^v/, '').split('.').map(Number);
+  return major > MINIMO[0] || (major === MINIMO[0] && minor >= MINIMO[1]);
 }
 
 export function needsInstall(root, exists = existsSync) {
@@ -33,7 +36,7 @@ function main() {
   const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 
   if (!nodeOk(process.version)) {
-    console.error(`ERRO: o ig-post precisa de Node 20 ou mais novo (este é ${process.version}).`);
+    console.error(`ERRO: o ig-post precisa de Node 22.12 ou mais novo (este é ${process.version}).`);
     process.exit(1);
   }
   console.log(`ok: node ${process.version}`);

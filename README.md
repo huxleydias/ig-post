@@ -21,7 +21,7 @@ O deck e a legenda estão em `examples/figma-mcp-guia-completo-pt-br/`.
 ## Pré-requisitos
 
 - [Claude Code](https://claude.com/claude-code)
-- Node 20 ou mais novo
+- Node 22.12 ou mais novo
 - Google Chrome ou Chromium instalado (o render usa o navegador da máquina,
   sem baixar outro)
 
