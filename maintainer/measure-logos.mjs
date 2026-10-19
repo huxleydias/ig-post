@@ -32,20 +32,21 @@
 import { readFile, writeFile, readdir } from 'node:fs/promises';
 import { dirname, join, extname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { existsSync } from 'node:fs';
 import puppeteer from 'puppeteer-core';
+import { resolveChrome } from '../src/lib/chrome.mjs';
 
-const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+let CHROME;
+try {
+  CHROME = resolveChrome();
+} catch (e) {
+  console.error(e.message);
+  process.exit(1);
+}
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 
 const tplIdx = process.argv.indexOf('--template');
 const tpl = tplIdx > -1 ? process.argv[tplIdx + 1] : 'punk-dark';
 const logosDir = join(root, 'templates', tpl, 'logos');
-
-if (!existsSync(CHROME)) {
-  console.error(`ERRO: Chrome não encontrado em ${CHROME}`);
-  process.exit(1);
-}
 
 const MIME = { '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg' };
 const CANVAS = 256;      // resolução de medição

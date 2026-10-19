@@ -9,8 +9,15 @@ import { readdir } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import puppeteer from 'puppeteer-core';
+import { resolveChrome } from '../src/lib/chrome.mjs';
 
-const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+let CHROME;
+try {
+  CHROME = resolveChrome();
+} catch (e) {
+  console.error(e.message);
+  process.exit(1);
+}
 const [dirA, dirB] = process.argv.slice(2).map((p) => resolve(p));
 if (!dirB) {
   console.error('Uso: node src/diff.mjs <dir-render> <dir-ref>');

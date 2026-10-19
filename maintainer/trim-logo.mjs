@@ -25,8 +25,15 @@ import { dirname, join, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { existsSync } from 'node:fs';
 import puppeteer from 'puppeteer-core';
+import { resolveChrome } from '../src/lib/chrome.mjs';
 
-const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+let CHROME;
+try {
+  CHROME = resolveChrome();
+} catch (e) {
+  console.error(e.message);
+  process.exit(1);
+}
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 
 const alvo = process.argv[2];

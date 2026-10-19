@@ -20,8 +20,15 @@ import { readFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import puppeteer from 'puppeteer-core';
+import { resolveChrome } from './lib/chrome.mjs';
 
-const CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+let CHROME;
+try {
+  CHROME = resolveChrome();
+} catch (e) {
+  console.error(e.message);
+  process.exit(1);
+}
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 
 const deckPath = process.argv[2];
