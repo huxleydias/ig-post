@@ -40,8 +40,12 @@ acha o Chrome.
 ## Uso
 
 ```
-/ig-post https://seublog.com/slug-do-post/
+/ig-post:ig-post https://seublog.com/slug-do-post/
 ```
+
+O prefixo `ig-post:` é como o Claude Code nomeia comandos de plugin. Pedir
+em texto livre também funciona: "faz um carrossel de Instagram deste post:
+https://seublog.com/slug-do-post/".
 
 O fluxo:
 
