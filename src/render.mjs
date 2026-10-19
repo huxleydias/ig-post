@@ -12,7 +12,7 @@
  * do frame, falha alto com o índice do slide.
  */
 
-import { readFile, writeFile, mkdir } from 'node:fs/promises';
+import { readFile, writeFile, mkdir, readdir, unlink } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import puppeteer from 'puppeteer-core';
@@ -62,6 +62,11 @@ const slideUrl = pathToFileURL(join(tplDir, 'slide.html')).href;
 
 const outDir = dirname(resolve(deckPath));
 await mkdir(outDir, { recursive: true });
+// PNG de um render anterior com mais slides sobraria na pasta e iria junto
+// na entrega. Só os NN.png do render saem; o resto da pasta fica.
+for (const f of await readdir(outDir)) {
+  if (/^\d{2}\.png$/.test(f)) await unlink(join(outDir, f));
+}
 
 // ---- render -----------------------------------------------------------
 const browser = await puppeteer.launch({
