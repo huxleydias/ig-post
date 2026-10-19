@@ -1,9 +1,11 @@
 #!/usr/bin/env node
 /**
- * preview.mjs — servidor de preview do carrossel no browser.
+ * preview.mjs: servidor de preview do carrossel no browser.
  *
- * Uso: node src/preview.mjs [porta]   (default 5210)
- * Depois abrir http://localhost:5210/?deck=<slug>
+ * Uso: node src/preview.mjs [--out <dir>] [--port <n>]
+ *   --out   pasta com os decks (<dir>/<slug>/deck.json). Padrão: ./ig-post
+ *   --port  porta inicial. Padrão: 5210. Ocupada, tenta as 10 seguintes.
+ * Ao subir imprime PREVIEW_URL=http://localhost:<porta>/ ; abrir com ?deck=<slug>.
  *
  * Renderiza os slides com o MESMO slide.html usado pelo render.mjs,
  * dentro de iframes em escala reduzida. O que aparece aqui é
@@ -12,11 +14,17 @@
 
 import { createServer } from 'node:http';
 import { readFile, readdir } from 'node:fs/promises';
-import { join, extname, dirname, normalize } from 'node:path';
+import { join, extname, dirname, normalize, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
-const port = Number(process.argv[2] ?? 5210);
+const arg = (nome, padrao) => {
+  const i = process.argv.indexOf(nome);
+  return i > -1 && process.argv[i + 1] ? process.argv[i + 1] : padrao;
+};
+const outDir = resolve(arg('--out', join(process.cwd(), 'ig-post')));
+const portaInicial = Number(arg('--port', 5210));
+const TENTATIVAS = 10;
 
 const MIME = {
   '.html': 'text/html; charset=utf-8',
@@ -105,7 +113,7 @@ async function load() {
 
   let deck;
   try {
-    deck = await (await fetch('/api/deck/' + slug)).json();
+    deck = await (await fetch('/api/deck/' + encodeURIComponent(slug))).json();
   } catch (e) {
     strip.innerHTML = '<div class="err">Nao consegui ler o deck: ' + e.message + '</div>';
     return;
@@ -162,7 +170,7 @@ document.getElementById('reload').addEventListener('click', load);
 listDecks().then(load);
 </script></body></html>`;
 
-createServer(async (req, res) => {
+const server = createServer(async (req, res) => {
   const url = new URL(req.url, 'http://localhost');
   const path = decodeURIComponent(url.pathname);
 
@@ -174,11 +182,14 @@ createServer(async (req, res) => {
 
     // lista de decks disponíveis
     if (path === '/api/decks') {
-      const dirs = await readdir(join(root, 'out'), { withFileTypes: true });
+      const dirs = await readdir(outDir, { withFileTypes: true }).catch((e) => {
+        if (e.code === 'ENOENT') return [];
+        throw e;
+      });
       const decks = [];
       for (const d of dirs.filter((d) => d.isDirectory())) {
         try {
-          await readFile(join(root, 'out', d.name, 'deck.json'));
+          await readFile(join(outDir, d.name, 'deck.json'));
           decks.push(d.name);
         } catch {}
       }
@@ -190,7 +201,7 @@ createServer(async (req, res) => {
     if (path.startsWith('/api/deck/')) {
       const slug = path.slice('/api/deck/'.length);
       if (slug.includes('/') || slug.includes('..')) throw new Error('slug inválido');
-      const raw = await readFile(join(root, 'out', slug, 'deck.json'), 'utf8');
+      const raw = await readFile(join(outDir, slug, 'deck.json'), 'utf8');
       res.writeHead(200, { 'content-type': MIME['.json'], 'cache-control': 'no-store' });
       return res.end(raw);
     }
@@ -213,6 +224,25 @@ createServer(async (req, res) => {
     res.writeHead(500, { 'content-type': MIME['.json'] });
     res.end(JSON.stringify({ error: e.message }));
   }
-}).listen(port, () => {
-  console.log(`preview do carrossel em http://localhost:${port}/`);
 });
+
+// Cada tentativa registra o próprio par listening/error e desfaz o outro,
+// senão o callback da porta ocupada dispara junto com o da porta livre.
+function ouvir(porta, restantes) {
+  const aoOuvir = () => {
+    server.off('error', aoFalhar);
+    console.log(`PREVIEW_URL=http://localhost:${porta}/`);
+    console.log(`preview do carrossel lendo decks de ${outDir}`);
+  };
+  const aoFalhar = (e) => {
+    server.off('listening', aoOuvir);
+    if (e.code === 'EADDRINUSE' && restantes > 0) return ouvir(porta + 1, restantes - 1);
+    console.error(`ERRO: não consegui abrir o preview na porta ${porta} (${e.code ?? e.message}).`);
+    process.exit(1);
+  };
+  server.once('listening', aoOuvir);
+  server.once('error', aoFalhar);
+  server.listen(porta);
+}
+
+ouvir(portaInicial, TENTATIVAS);
