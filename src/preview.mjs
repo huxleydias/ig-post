@@ -5,7 +5,8 @@
  * Uso: node src/preview.mjs [--out <dir>] [--port <n>]
  *   --out   pasta com os decks (<dir>/<slug>/deck.json). Padrão: ./ig-post
  *   --port  porta inicial. Padrão: 5210. Ocupada, tenta as 10 seguintes.
- * Ao subir imprime PREVIEW_URL=http://localhost:<porta>/ ; abrir com ?deck=<slug>.
+ * Escuta só em 127.0.0.1. Ao subir imprime PREVIEW_URL=http://127.0.0.1:<porta>/ ;
+ * abrir com ?deck=<slug>.
  *
  * Renderiza os slides com o MESMO slide.html usado pelo render.mjs,
  * dentro de iframes em escala reduzida. O que aparece aqui é
@@ -171,10 +172,16 @@ listDecks().then(load);
 </script></body></html>`;
 
 const server = createServer(async (req, res) => {
-  const url = new URL(req.url, 'http://localhost');
-  const path = decodeURIComponent(url.pathname);
-
   try {
+    const url = new URL(req.url, 'http://127.0.0.1');
+    let path;
+    try {
+      path = decodeURIComponent(url.pathname);
+    } catch {
+      res.writeHead(400, { 'content-type': MIME['.json'] });
+      return res.end(JSON.stringify({ error: 'URL malformada' }));
+    }
+
     if (path === '/' || path === '/index.html') {
       res.writeHead(200, { 'content-type': MIME['.html'] });
       return res.end(PAGE);
@@ -221,8 +228,10 @@ const server = createServer(async (req, res) => {
 
     res.writeHead(404).end('não encontrado');
   } catch (e) {
-    res.writeHead(500, { 'content-type': MIME['.json'] });
-    res.end(JSON.stringify({ error: e.message }));
+    // ENOENT vira 404 sem o caminho absoluto da máquina na resposta.
+    const naoAchou = e.code === 'ENOENT';
+    res.writeHead(naoAchou ? 404 : 500, { 'content-type': MIME['.json'] });
+    res.end(JSON.stringify({ error: naoAchou ? 'não encontrado' : e.message }));
   }
 });
 
@@ -231,7 +240,7 @@ const server = createServer(async (req, res) => {
 function ouvir(porta, restantes) {
   const aoOuvir = () => {
     server.off('error', aoFalhar);
-    console.log(`PREVIEW_URL=http://localhost:${porta}/`);
+    console.log(`PREVIEW_URL=http://127.0.0.1:${porta}/`);
     console.log(`preview do carrossel lendo decks de ${outDir}`);
   };
   const aoFalhar = (e) => {
@@ -242,7 +251,9 @@ function ouvir(porta, restantes) {
   };
   server.once('listening', aoOuvir);
   server.once('error', aoFalhar);
-  server.listen(porta);
+  // Só loopback: não expõe os decks na rede e colide com qualquer servidor
+  // local na mesma porta, em vez de dividir a porta com ele.
+  server.listen(porta, '127.0.0.1');
 }
 
 ouvir(portaInicial, TENTATIVAS);

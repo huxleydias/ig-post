@@ -36,11 +36,47 @@ test('abre deck com slug acentuado', async () => {
   } finally { p.kill(); }
 });
 
-test('porta ocupada sobe na seguinte e imprime a URL real', async () => {
-  const ocupa = createServer().listen(5330);
+// O requisito é a URL impressa abrir o preview, qualquer que seja o ocupante.
+// No macOS o bind em 127.0.0.1 convive com um ocupante curinga e recebe as
+// conexões de 127.0.0.1; no Linux dá EADDRINUSE e o preview pula de porta.
+for (const [host, porta] of [[undefined, 5330], ['127.0.0.1', 5340], ['::1', 5350]]) {
+  test(`porta ocupada (${host ?? 'curinga'}): a URL impressa chega no preview, não no outro servidor`, async () => {
+    const ocupa = createServer((s) => s.end('HTTP/1.1 200 OK\r\ncontent-length: 5\r\n\r\noutro')).listen(porta, host);
+    await new Promise((ok) => ocupa.once('listening', ok));
+    try {
+      const { p, url } = await subir(await pasta('meu-post'), porta);
+      try {
+        assert.match(url, /^http:\/\/127\.0\.0\.1:\d+\/$/);
+        assert.deepEqual(await (await fetch(url + 'api/decks')).json(), ['meu-post']);
+      } finally { p.kill(); }
+    } finally { ocupa.close(); }
+  });
+}
+
+test('porta ocupada em 127.0.0.1 faz o preview pular para a seguinte', async () => {
+  const ocupa = createServer().listen(5380, '127.0.0.1');
+  await new Promise((ok) => ocupa.once('listening', ok));
   try {
-    const { p, url } = await subir(await pasta(), 5330);
+    const { p, url } = await subir(await pasta(), 5380);
     p.kill();
-    assert.equal(url, 'http://localhost:5331/');
+    assert.equal(url, 'http://127.0.0.1:5381/');
   } finally { ocupa.close(); }
+});
+
+test('URL malformada responde 400 e o preview continua no ar', async () => {
+  const { p, url } = await subir(await pasta('meu-post'), 5360);
+  try {
+    assert.equal((await fetch(url + '%E0%A4%A')).status, 400);
+    assert.equal((await fetch(url + 'api/decks')).status, 200);
+  } finally { p.kill(); }
+});
+
+test('deck inexistente responde 404 sem expor caminho da máquina', async () => {
+  const out = await pasta();
+  const { p, url } = await subir(out, 5370);
+  try {
+    const r = await fetch(url + 'api/deck/nao-existe');
+    assert.equal(r.status, 404);
+    assert.ok(!(await r.text()).includes(out));
+  } finally { p.kill(); }
 });
