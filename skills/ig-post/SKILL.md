@@ -88,7 +88,7 @@ ou a afirmação original, só remove a subordinada e a alternativa.
 0. **Preparar** (uma vez por sessão):
 
    ```
-   node ${CLAUDE_PLUGIN_ROOT}/src/setup.mjs
+   node "${CLAUDE_PLUGIN_ROOT}/src/setup.mjs"
    ```
 
    Saída 0 com três linhas `ok:` segue. Saída 1: mostre a mensagem ao
@@ -97,7 +97,7 @@ ou a afirmação original, só remove a subordinada e a alternativa.
 1. **Extrair**:
 
    ```
-   node ${CLAUDE_PLUGIN_ROOT}/src/extract.mjs <url> --out ./ig-post
+   node "${CLAUDE_PLUGIN_ROOT}/src/extract.mjs" <url> --out ./ig-post
    ```
 
    Devolve title, lead, sections, categoria, tags, temVideo, url, slug e
@@ -114,7 +114,7 @@ ou a afirmação original, só remove a subordinada e a alternativa.
 3. **AUTO-CHECAGEM (obrigatória, em loop até passar)**:
 
    ```
-   node ${CLAUDE_PLUGIN_ROOT}/src/check.mjs ./ig-post/<slug>/deck.json
+   node "${CLAUDE_PLUGIN_ROOT}/src/check.mjs" ./ig-post/<slug>/deck.json
    ```
 
    Saída 0 = tudo cabe, segue. Saída 1 = lista campo a campo o que
@@ -133,10 +133,10 @@ ou a afirmação original, só remove a subordinada e a alternativa.
    background (Bash com `run_in_background`):
 
    ```
-   node ${CLAUDE_PLUGIN_ROOT}/src/preview.mjs --out ./ig-post
+   node "${CLAUDE_PLUGIN_ROOT}/src/preview.mjs" --out ./ig-post
    ```
 
-   Leia a linha `PREVIEW_URL=http://localhost:<porta>/` da saída (a porta
+   Leia a linha `PREVIEW_URL=http://127.0.0.1:<porta>/` da saída (a porta
    pode não ser 5210 se ela estiver ocupada) e abra
    `<PREVIEW_URL>?deck=<slug>`:
    - no app desktop, com a ferramenta `preview_start` passando `{url}`;
@@ -151,7 +151,7 @@ ou a afirmação original, só remove a subordinada e a alternativa.
 5. **Renderizar** (só depois da aprovação):
 
    ```
-   node ${CLAUDE_PLUGIN_ROOT}/src/render.mjs ./ig-post/<slug>/deck.json
+   node "${CLAUDE_PLUGIN_ROOT}/src/render.mjs" ./ig-post/<slug>/deck.json
    ```
 
    Recusa e sai com código 2 se algo estourar (rede de segurança; o check
