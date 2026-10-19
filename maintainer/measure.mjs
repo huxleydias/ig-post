@@ -3,7 +3,7 @@
  * measure.mjs — mede a capacidade real de cada bloco de texto do template
  * e grava os limites em template.json.
  *
- * Uso: node src/measure.mjs [template]      (default punk-dark)
+ * Uso: node maintainer/measure.mjs [template]      (default punk-dark)
  *
  * O modelo é em LINHAS, não em caracteres soltos, porque é assim que o
  * layout se comporta: cada bloco tem N linhas disponíveis e cada linha

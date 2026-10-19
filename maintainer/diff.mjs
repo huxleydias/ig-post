@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 /**
  * diff.mjs — compara os PNGs renderizados com os exports oficiais do Figma.
- * Uso: node src/diff.mjs out/<slug> out/figma-ref
+ * Uso: node maintainer/diff.mjs <pasta-render> <pasta-figma-ref>
  * Métrica: % de pixels com diferença perceptível (delta RGB > 32) e
- * imagem de diff (magenta) por par, salva em out/<slug>/diff-NN.png.
+ * imagem de diff (magenta) por par, salva na pasta do render como diff-NN.png.
  */
 import { readdir } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
@@ -20,7 +20,7 @@ try {
 }
 const [dirA, dirB] = process.argv.slice(2).map((p) => resolve(p));
 if (!dirB) {
-  console.error('Uso: node src/diff.mjs <dir-render> <dir-ref>');
+  console.error('Uso: node maintainer/diff.mjs <dir-render> <dir-ref>');
   process.exit(1);
 }
 

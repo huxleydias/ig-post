@@ -5,7 +5,7 @@
  *
  * Uso:
  *   set -a; source ../../.env; set +a
- *   node src/fetch-figma.mjs
+ *   node maintainer/fetch-figma.mjs
  *
  * Requer FIGMA_ACCESS_TOKEN no .env (escopo: File content read).
  * Saída: out/figma-nodes.json e out/figma-variables.json
@@ -19,7 +19,7 @@ const NODE_IDS = ['1:5', '1:31', '1:54', '1:76']; // cover, hook, fact, cta
 // emergência/headless e exige a flag explícita para rodar.
 if (!process.argv.includes('--fallback-rest')) {
   console.error('Este script é FALLBACK. O caminho padrão é o MCP `figma` (get_design_context / get_screenshot).');
-  console.error('Se o MCP estiver indisponível, rode com: node src/fetch-figma.mjs --fallback-rest');
+  console.error('Se o MCP estiver indisponível, rode com: node maintainer/fetch-figma.mjs --fallback-rest');
   process.exit(1);
 }
 console.warn('AVISO: usando fallback REST do Figma. Prefira o MCP `figma` quando disponível.');

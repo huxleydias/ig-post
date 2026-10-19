@@ -3,7 +3,7 @@
  * trim-logo.mjs — tira o fundo chapado de um asset de logo e corta a
  * moldura vazia, deixando o glifo sangrando até a borda do arquivo.
  *
- * Uso: node src/trim-logo.mjs templates/punk-dark/logos/figma.png [--bg 000000]
+ * Uso: node maintainer/trim-logo.mjs templates/punk-dark/logos/figma.png [--bg 000000]
  *
  * Por que existe: alguns arquivos de logo vêm como "tile" com fundo
  * PRETO OPACO por baixo do glifo. No slide (fundo preto) esse fundo some
@@ -16,7 +16,7 @@
  * grava num canvas quadrado com o glifo centralizado. Sobrescreve o
  * arquivo (o original está no git).
  *
- * Depois de rodar: `node src/measure-logos.mjs` para recalcular as
+ * Depois de rodar: `node maintainer/measure-logos.mjs` para recalcular as
  * frações.
  */
 
@@ -38,7 +38,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 
 const alvo = process.argv[2];
 if (!alvo) {
-  console.error('Uso: node src/trim-logo.mjs <caminho/logo.png> [--bg RRGGBB]');
+  console.error('Uso: node maintainer/trim-logo.mjs <caminho/logo.png> [--bg RRGGBB]');
   process.exit(1);
 }
 const bgIdx = process.argv.indexOf('--bg');
@@ -137,4 +137,4 @@ console.log(`ok: ${alvo}`);
 console.log(`  antes:   ${resultado.antes.w}x${resultado.antes.h}, conteúdo ocupava ${(resultado.fracaoAntes * 100).toFixed(0)}% do arquivo`);
 console.log(`  agora:   ${resultado.conteudo.w}x${resultado.conteudo.h} sangrando até a borda`);
 console.log(`  ${resultado.zerados} pixels de fundo viraram transparente`);
-console.log('  rode: node src/measure-logos.mjs');
+console.log('  rode: node maintainer/measure-logos.mjs');

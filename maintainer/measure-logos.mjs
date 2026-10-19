@@ -2,7 +2,7 @@
 /**
  * measure-logos.mjs — normaliza o tamanho ÓPTICO dos logos de tool.
  *
- * Uso: node src/measure-logos.mjs [--template punk-dark]
+ * Uso: node maintainer/measure-logos.mjs [--template punk-dark]
  *
  * Problema que resolve: os arquivos de logo vêm de fontes diferentes.
  * Uns são "app tile" (arte sangrando até a borda do arquivo, ex.: notion,
@@ -153,7 +153,7 @@ for (const [nome, arquivo] of [...porNome].sort()) {
     // Escalar pelo contraste faria esse fundo OPACO cobrir os vizinhos,
     // então fica no alpha (conservador) e avisa para consertar o asset.
     const conserto = extname(arquivo).toLowerCase() === '.png'
-      ? `node src/trim-logo.mjs templates/${tpl}/logos/${arquivo}`
+      ? `node maintainer/trim-logo.mjs templates/${tpl}/logos/${arquivo}`
       : `converter ${arquivo} para PNG e rodar src/trim-logo.mjs, ou trocar por um asset sem fundo`;
     console.warn(
       `AVISO: ${arquivo} tem fundo chapado (alpha ${(medida.alpha * 100).toFixed(0)}% vs ` +
