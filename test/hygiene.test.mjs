@@ -3,13 +3,15 @@ import assert from 'node:assert/strict';
 import { execSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 
-const texto = execSync('git ls-files -co --exclude-standard', { encoding: 'utf8' })
-  .split('\n').filter((f) => /\.(md|mjs|js|json|html|css|ts|txt)$/.test(f) && !f.startsWith('test/'));
+const versionados = execSync('git ls-files -co --exclude-standard', { encoding: 'utf8' }).split('\n').filter(Boolean);
+const naoTexto = /\.(png|jpe?g|woff2?|ttf)$/;
+const todosTexto = versionados.filter((f) => !naoTexto.test(f));
+const texto = todosTexto.filter((f) => /\.(md|mjs|js|json|html|css|ts|txt)$/.test(f) && !f.startsWith('test/'));
 const ler = (f) => readFileSync(f, 'utf8');
 const PODE_HUXLEY = new Set(['README.md', 'NOTICE.md', 'LICENSE', '.claude-plugin/plugin.json', '.claude-plugin/marketplace.json']);
 
 test('nenhum travessão em arquivo publicado', () => {
-  const sujos = texto.filter((f) => /[—–]/.test(ler(f)));
+  const sujos = todosTexto.filter((f) => /[\u2014\u2013]/.test(ler(f)));
   assert.deepEqual(sujos, []);
 });
 
