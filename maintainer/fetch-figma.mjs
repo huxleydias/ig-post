@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * fetch-figma.mjs — lê propriedades e variáveis dos frames do template
+ * fetch-figma.mjs: lê propriedades e variáveis dos frames do template
  * direto da Figma REST API e salva o JSON bruto para auditoria de tokens.
  *
  * Uso:

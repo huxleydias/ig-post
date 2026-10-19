@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 /**
- * check.mjs — confere um deck ANTES de gerar imagem e diz exatamente o
+ * check.mjs: confere um deck ANTES de gerar imagem e diz exatamente o
  * que encurtar.
  *
  * Uso: node src/check.mjs out/<slug>/deck.json [--json]
  * Saída: 0 se tudo cabe, 1 se algum campo estoura.
  *
  * Faz duas passagens:
- *   1. Orçamento de caracteres (template.json > limites) — barato, roda
+ *   1. Orçamento de caracteres (template.json > limites): barato, roda
  *      sem browser e é o que o autor do deck deve respeitar de largada.
- *   2. Medição real no slide.html — a verdade final, pega os casos em
+ *   2. Medição real no slide.html: a verdade final, pega os casos em
  *      que o texto cabe no orçamento mas quebra mal.
  *
  * Para cada problema informa o campo, o excesso e QUANTOS CARACTERES

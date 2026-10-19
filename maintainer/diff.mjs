@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * diff.mjs — compara os PNGs renderizados com os exports oficiais do Figma.
+ * diff.mjs: compara os PNGs renderizados com os exports oficiais do Figma.
  * Uso: node maintainer/diff.mjs <pasta-render> <pasta-figma-ref>
  * Métrica: % de pixels com diferença perceptível (delta RGB > 32) e
  * imagem de diff (magenta) por par, salva na pasta do render como diff-NN.png.

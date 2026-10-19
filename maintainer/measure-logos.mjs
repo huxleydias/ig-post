@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * measure-logos.mjs — normaliza o tamanho ÓPTICO dos logos de tool.
+ * measure-logos.mjs: normaliza o tamanho ÓPTICO dos logos de tool.
  *
  * Uso: node maintainer/measure-logos.mjs [--template punk-dark]
  *

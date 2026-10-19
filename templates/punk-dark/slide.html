@@ -43,7 +43,7 @@
   ol.body li { padding-left: 8px; }
 
   /* ---- logos de tool (cover) ----
-     Posicao FIXA (regra do Huxley, 22/07/2026): ancoradas a 430px do
+     Posicao FIXA (regra do template): ancoradas a 430px do
      bottom do canvas. Nao seguem o fluxo do texto. */
   .logos {
     position: absolute; left: 141px; bottom: 430px;
@@ -75,7 +75,7 @@
     backdrop-filter: blur(12px);
     box-shadow: var(--glass-rim);
   }
-  /* 22/07/2026 (Huxley): o cta-card usa o MESMO fundo do footer-bar da
+  /* Regra do template: o cta-card usa o MESMO fundo do footer-bar da
      capa. Sem grão de NOISE, só o vidro liso de .glass. */
 
   .footer-card {
@@ -105,7 +105,7 @@
   .dot.active { width: var(--dot-active-w); background: var(--accent); }
 
   /* ---- cta-card ----
-     Posicao FIXA (regra do Huxley, 22/07/2026): ancorado a 430px do
+     Posicao FIXA (regra do template): ancorado a 430px do
      bottom do canvas. Nao segue o fluxo do texto; cresce para cima se
      a URL quebrar em mais linhas. */
   .cta-card {
@@ -122,7 +122,7 @@
 <body>
 <script>
 /**
- * window.renderSlide(data) — desenha um slide e devolve a "altura exigida":
+ * window.renderSlide(data): desenha um slide e devolve a "altura exigida":
  *   igual à altura do frame quando cabe; frame + estouro quando não cabe.
  * data: { layout, tags, title, body, items, logos, url, index, total, footerUrl? }
  */
@@ -155,7 +155,7 @@ window.renderSlide = function (data) {
     content.textContent = data.body;
   }
 
-  // ---- fluxo vertical (regras do Huxley, 22/07/2026) ---------------
+  // ---- fluxo vertical (regra do template) ---------------
   // 1. O corpo comeca 100px abaixo da BASE do titulo (margin-bottom do
   //    titulo), nao numa coordenada fixa. Titulo de 1 ou 2 linhas
   //    produz o mesmo respiro.
@@ -219,7 +219,7 @@ window.renderSlide = function (data) {
 
   const footerTop = data.layout === 'cover' ? tok('--content-bottom-cover') : tok('--content-bottom');
 
-  // Teto de linhas do corpo. Regras do Huxley (22/07/2026): descricao
+  // Teto de linhas do corpo. Regras do template: descricao
   // vai ate 7 linhas; na capa so 4, porque abaixo dela entram as logos.
   // Espelhado em template.json > limites.corpo.maxLinhas.
   const MAX_LINHAS = { cover: 4, text: 7, list: 9, cta: 4 };

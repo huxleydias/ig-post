@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * measure.mjs — mede a capacidade real de cada bloco de texto do template
+ * measure.mjs: mede a capacidade real de cada bloco de texto do template
  * e grava os limites em template.json.
  *
  * Uso: node maintainer/measure.mjs [template]      (default punk-dark)
@@ -12,8 +12,8 @@
  * bem diferentes).
  *
  * Mede duas coisas por bloco:
- *   charsPorLinha — pior caso observado, com quebra em fronteira de palavra
- *   maxLinhas     — quantas linhas cabem antes de bater no que vem depois
+ *   charsPorLinha: pior caso observado, com quebra em fronteira de palavra
+ *   maxLinhas    : quantas linhas cabem antes de bater no que vem depois
  */
 
 import { readFile, writeFile } from 'node:fs/promises';

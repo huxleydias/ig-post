@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * trim-logo.mjs — tira o fundo chapado de um asset de logo e corta a
+ * trim-logo.mjs: tira o fundo chapado de um asset de logo e corta a
  * moldura vazia, deixando o glifo sangrando até a borda do arquivo.
  *
  * Uso: node maintainer/trim-logo.mjs templates/punk-dark/logos/figma.png [--bg 000000]

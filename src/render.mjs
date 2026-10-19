@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * render.mjs — deck.json → PNGs 1080x1440.
+ * render.mjs: deck.json → PNGs 1080x1440.
  *
  * Uso: node src/render.mjs out/<slug>/deck.json
  *
