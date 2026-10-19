@@ -1,0 +1,4 @@
+node_modules/
+ig-post/
+.DS_Store
+.env*

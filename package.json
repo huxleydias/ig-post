@@ -1,0 +1,12 @@
+{
+  "name": "ig-post",
+  "version": "1.0.0",
+  "description": "Carrossel de Instagram a partir de um post WordPress, como plugin do Claude Code.",
+  "type": "module",
+  "private": true,
+  "license": "MIT",
+  "engines": { "node": ">=20" },
+  "scripts": { "test": "node --test" },
+  "dependencies": { "puppeteer-core": "^25.3.0" },
+  "devDependencies": { "@figma/code-connect": "^1.4.9" }
+}

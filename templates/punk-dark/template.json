@@ -1,0 +1,54 @@
+{
+  "name": "punk-dark",
+  "width": 1080,
+  "height": 1440,
+  "layouts": [
+    "cover",
+    "text",
+    "list",
+    "cta"
+  ],
+  "footerUrl": "www.punkmetrics.com",
+  "figma": {
+    "file": "6sDOmSDlX549cPK9dnEH54",
+    "page": "template-instagram",
+    "nodes": {
+      "cover": "1:5",
+      "text": "1:31",
+      "list": "1:54",
+      "cta": "1:76"
+    }
+  },
+  "limites": {
+    "_nota": "Capacidade medida por src/measure.mjs contra o slide.html real. Modelo em linhas: linhas de um bloco = soma de ceil(caracteres / charsPorLinha) por parágrafo ou item. Rode de novo se o design ou a tipografia mudarem.",
+    "titulo": {
+      "charsPorLinha": 27,
+      "maxLinhas": 3,
+      "maxChars": 59
+    },
+    "corpo": {
+      "charsPorLinha": 35,
+      "maxLinhas": {
+        "text": 7,
+        "coverComLogos": 4,
+        "coverSemLogos": 4,
+        "cta": 4
+      },
+      "maxChars": {
+        "text": 191,
+        "coverComLogos": 103,
+        "coverSemLogos": 103,
+        "cta": 103
+      }
+    },
+    "lista": {
+      "charsPorLinha": 30,
+      "maxLinhas": 7,
+      "maxChars": 165
+    },
+    "url": {
+      "_nota": "Fixado manualmente (2 linhas de ~56 chars no card). A sonda do measure.mjs nao converge com o card ancorado no bottom (cresce pra cima, nunca estoura pra baixo); o limite real de colisao com o corpo e pego pela passagem 2 do check.",
+      "maxChars": 112
+    }
+  }
+}

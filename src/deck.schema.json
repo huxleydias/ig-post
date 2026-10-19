@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Deck de carrossel Instagram PunkMetrics",
+  "type": "object",
+  "required": ["template", "source", "slug", "slides", "caption"],
+  "additionalProperties": false,
+  "properties": {
+    "template": { "type": "string", "minLength": 1 },
+    "source": { "type": "string", "format": "uri" },
+    "slug": { "type": "string", "minLength": 1 },
+    "slides": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "required": ["layout", "title"],
+        "additionalProperties": false,
+        "properties": {
+          "layout": { "enum": ["cover", "text", "list", "cta"] },
+          "tags": { "type": "array", "items": { "type": "string" }, "maxItems": 3 },
+          "title": { "type": "string", "minLength": 1 },
+          "body": { "type": "string" },
+          "items": { "type": "array", "items": { "type": "string" }, "minItems": 2, "maxItems": 6 },
+          "logos": { "type": "array", "items": { "type": "string" }, "maxItems": 4 },
+          "url": { "type": "string", "format": "uri" }
+        }
+      }
+    },
+    "caption": { "type": "string", "minLength": 1 },
+    "hashtags": { "type": "array", "items": { "type": "string", "pattern": "^#" } }
+  }
+}

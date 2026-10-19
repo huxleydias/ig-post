@@ -1,0 +1,71 @@
+{
+  "template": "punk-dark",
+  "source": "https://punkmetrics.com/figma-mcp-guia-completo-pt-br/",
+  "slug": "figma-mcp-guia-completo-pt-br",
+  "slides": [
+    {
+      "layout": "cover",
+      "tags": [
+        "AI",
+        "BLOG",
+        "VÍDEO"
+      ],
+      "title": "Figma MCP Guia Completo em PT-BR 🇧🇷",
+      "body": "Um guia definitivo para configurar e usar no Claude Code, Cursor, Codex e VS Code.",
+      "logos": [
+        "figma",
+        "cursor"
+      ]
+    },
+    {
+      "layout": "text",
+      "tags": [
+        "BLOG",
+        "VÍDEO"
+      ],
+      "title": "O que é o Figma MCP",
+      "body": "O Figma MCP envia contexto, não envia código. Quem escreve o código é o agente: Claude Code, Cursor, Codex ou Copilot. Output ruim? Olhe primeiro para o agente e o prompt."
+    },
+    {
+      "layout": "list",
+      "tags": [
+        "BLOG",
+        "VÍDEO"
+      ],
+      "title": "Os quatro erros de configuração",
+      "items": [
+        "Pediu Personal Access Token? Pare.",
+        "Instalar não é autenticar.",
+        "O MCP herda as suas permissões do Figma.",
+        "Erro de permissão costuma ser conta errada."
+      ]
+    },
+    {
+      "layout": "text",
+      "tags": [
+        "BLOG",
+        "VÍDEO"
+      ],
+      "title": "Do canvas para o pull request",
+      "body": "O MCP lê o design já com as suas alterações. O agente atualiza o repositório, cria uma branch, faz o commit e abre o pull request. O julgamento de produto continua sendo seu."
+    },
+    {
+      "layout": "cta",
+      "tags": [
+        "BLOG",
+        "VÍDEO"
+      ],
+      "title": "Passo a passo completo no blog",
+      "body": "Instalação no Claude Code, Cursor, Codex e VS Code, com vídeo e fontes. Link na bio.",
+      "url": "https://punkmetrics.com/figma-mcp-guia-completo-pt-br/"
+    }
+  ],
+  "caption": "O Figma MCP envia contexto de design para o agente. Quem escreve o código é o agente.\n\nDepois de iterar no Figma, o agente lê o design com as suas alterações, atualiza o repositório e abre o pull request. O julgamento de produto continua sendo seu.\n\nNo guia tem a instalação no Claude Code, Cursor, Codex e VS Code, os quatro erros de configuração e o fluxo do canvas até o pull request.\n\nLink na bio.",
+  "hashtags": [
+    "#figma",
+    "#figmamcp",
+    "#claudecode",
+    "#designsystem",
+    "#productdesign"
+  ]
+}

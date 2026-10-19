@@ -1,0 +1,120 @@
+/*
+ * tokens.css — template punk-dark
+ * Fonte: Figma "social-ai" / template-instagram, lido via REST API
+ * (fetch-figma.mjs, out/figma-nodes.json). Todos os valores exatos.
+ *
+ * Nodes de referência: 1:5 cover | 1:31 text | 1:54 list | 1:76 cta
+ */
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('fonts/roboto-var.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Inter';
+  src: url('fonts/inter-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Inter';
+  src: url('fonts/inter-700.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+}
+
+:root {
+  /* frame */
+  --frame-w: 1080px;
+  --frame-h: 1440px;
+  --bg: #000000;
+
+  /* cores */
+  --text-primary: #ffffff;
+  --text-on-tag: #000000;
+  --surface-tag: #ffffff;
+  /* footer-bar e cta-card. 22/07/2026: biblioteca atualizou o fill dos
+     main components (6:20, 6:32) de 10% para 16%; as instâncias nos
+     frames ig-feed-01..04 ainda carregam override antigo de 10%, mas a
+     fonte da verdade é a biblioteca. */
+  /* 22/07/2026 (spec do Huxley + instâncias 16:11/16:12 nos frames):
+     vidro = branco 10% + efeito GLASS nativo. Os MAIN components
+     6:20/6:32 ainda carregam 16%, mas a spec ditada e as instâncias
+     dizem 10% — 10% é a verdade. Sem NOISE: o cta-card usa o MESMO
+     fundo do footer-bar da capa (decisão do Huxley, 22/07/2026). */
+  --surface-glass: rgba(255, 255, 255, 0.10);
+  /* Efeito GLASS nativo do Figma (rim de refração nas bordas).
+     Aproximação CSS: highlights inset. */
+  --glass-rim: inset 0 1.5px 0 rgba(255, 255, 255, 0.12),
+               inset 0 -1px 0 rgba(255, 255, 255, 0.06);
+  --accent: #b0a9f1;                          /* dot ativo e link do CTA */
+
+  /* grid */
+  --margin-x: 140px;
+  --content-w: 771px;
+
+  /* pills @140,200 — pad 10/16, radius 28, Roboto 400 18 */
+  --y-pills: 200px;
+  --pill-pad: 10px 16px;
+  --pill-radius: 28px;
+  --pill-font: 400 18px/21px 'Roboto';
+  --pill-gap: 30px;
+
+  /* título @140,316 — Inter 700 60, lh 68.4.
+     22/07/2026: Huxley trocou Roboto por Inter Bold nos títulos (node
+     1:6 da capa já migrou no Figma; regra vale pra todos os layouts). */
+  --y-title: 316px;
+  --title-font: 700 60px/68.4px 'Inter';
+
+  /* corpo/lead @140,558 — Inter 400 50, lh 60 (todos os layouts) */
+  --y-body: 558px;
+  --body-font: 400 50px/60px 'Inter';
+
+  /* logos de tool (cover) — 90x90 r23, gap 26.
+     22/07/2026: posicao vertical agora e FIXA a 430px do bottom do
+     canvas (regra do Huxley, definida em slide.html). --y-logos ficou
+     como referencia historica do Figma (@141,894) e nao e mais usado. */
+  --y-logos: 894px;
+  --logo-size: 90px;
+  --logo-radius: 23px;
+  --logo-gap: 26px;
+
+  /* footer glass card (só cover) @82,1129 — 915x167 r40 */
+  --footer-card-x: 82px;
+  --footer-card-y: 1129px;
+  --footer-card-w: 915px;
+  --footer-card-h: 167px;
+  --card-radius: 40px;
+
+  /* conteúdo do footer (mesmas coords em todos os layouts) */
+  --brand-x: 139px;   /* PunkMetrics Brand @139,1182 88x58 */
+  --brand-y: 1182px;
+  --brand-w: 88px;
+  --brand-h: 58px;
+  --url-y: 1204px;    /* www... centrado, Inter 400 22 lh54 */
+  --url-font: 400 22px/54px 'Inter';
+  --arrow-x: 893px;   /* Arrow @893,1192 w47 */
+  --arrow-y: 1192px;
+  --arrow-w: 47px;
+  --dots-right: 940px; /* fileira termina em x=940 */
+  --dots-y: 1217px;
+  --dot: 22px;         /* r20 #FFF */
+  --dot-active-w: 42px;/* r20 var(--accent) */
+  --dot-gap: 14px;
+
+  /* cta-card @133 — 807x168 r40 pad 24/42, link Inter 400 44 lh60.
+     22/07/2026: posicao vertical agora e FIXA a 430px do bottom do
+     canvas (regra do Huxley, definida em slide.html). --cta-card-y
+     ficou como referencia historica do Figma (@828) e nao e mais usado. */
+  --cta-card-x: 133px;
+  --cta-card-y: 828px;
+  --cta-card-w: 807px;
+  --cta-card-pad: 24px 42px;
+  --cta-font: 400 44px/60px 'Inter';
+
+  /* limite inferior do conteúdo (topo do footer) */
+  --content-bottom-cover: 1129px;
+  --content-bottom: 1182px;
+}

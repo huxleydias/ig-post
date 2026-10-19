@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>punk-dark slide</title>
+<link rel="stylesheet" href="tokens.css">
+<script src="logo-box.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: var(--frame-w); height: var(--frame-h); }
+  body { background: var(--bg); overflow: hidden; position: relative; }
+
+  /* ---- pills ---- */
+  .pills {
+    position: absolute; left: var(--margin-x); top: var(--y-pills);
+    display: flex; gap: var(--pill-gap);
+  }
+  .pill {
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: var(--pill-pad); border-radius: var(--pill-radius);
+    background: var(--surface-tag);
+    font: var(--pill-font); color: var(--text-on-tag);
+    text-transform: uppercase; white-space: nowrap;
+  }
+
+  /* ---- título ---- */
+  .title {
+    position: absolute; left: var(--margin-x); top: var(--y-title);
+    width: var(--content-w);
+    font: var(--title-font); color: var(--text-primary);
+  }
+
+  /* ---- corpo (lead, texto, lista, corpo do cta) ----
+     top e definido em JS: fica 100px abaixo da base do titulo, para o
+     respiro nao crescer quando o titulo ocupa uma linha so. */
+  .body {
+    position: absolute; left: var(--margin-x); top: var(--y-body);
+    width: var(--content-w);
+    font: var(--body-font); color: var(--text-primary);
+    white-space: pre-line;
+  }
+  ol.body { padding-left: 64px; white-space: normal; }
+  ol.body li { padding-left: 8px; }
+
+  /* ---- logos de tool (cover) ----
+     Posicao FIXA (regra do Huxley, 22/07/2026): ancoradas a 430px do
+     bottom do canvas. Nao seguem o fluxo do texto. */
+  .logos {
+    position: absolute; left: 141px; bottom: 430px;
+    display: flex; gap: var(--logo-gap);
+  }
+  /* Cada logo mora num slot de tamanho fixo. O slot define a grade e o
+     espacamento; a imagem dentro dele e escalada por 1/LOGO_BOX para que
+     o CONTEUDO visivel ocupe o mesmo tamanho optico em todos. Sem isso um
+     asset "app tile" (arte ate a borda) parece maior que um glifo solto
+     com margem transparente, mesmo os dois no mesmo box. */
+  .logo-slot {
+    flex: 0 0 auto;
+    width: var(--logo-size); height: var(--logo-size);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .logos img {
+    width: 100%; height: 100%;
+    border-radius: var(--logo-radius); object-fit: contain;
+  }
+
+  /* ---- superfícies de vidro (footer da capa e cta-card) ----
+     Fonte: main components 6:20/6:32 do Figma, lidos em 22/07/2026:
+     fill branco 16% + NOISE monotone d=1 size=0.3 (grão fino) + efeito
+     GLASS nativo (rim de refração nas bordas), aproximado em CSS por
+     backdrop-blur + highlights inset. */
+  .glass {
+    position: absolute; background: var(--surface-glass);
+    border-radius: var(--card-radius);
+    backdrop-filter: blur(12px);
+    box-shadow: var(--glass-rim);
+  }
+  /* 22/07/2026 (Huxley): o cta-card usa o MESMO fundo do footer-bar da
+     capa. Sem grão de NOISE, só o vidro liso de .glass. */
+
+  .footer-card {
+    left: var(--footer-card-x); top: var(--footer-card-y);
+    width: var(--footer-card-w); height: var(--footer-card-h);
+  }
+
+  /* ---- conteúdo do footer (coords idênticas em todos os layouts) ---- */
+  .brand {
+    position: absolute; left: var(--brand-x); top: var(--brand-y);
+    width: var(--brand-w); height: var(--brand-h); object-fit: contain;
+  }
+  .footer-url {
+    position: absolute; left: 0; top: var(--url-y); width: var(--frame-w);
+    text-align: center;
+    font: var(--url-font); color: var(--text-primary);
+  }
+  .arrow {
+    position: absolute; left: var(--arrow-x); top: var(--arrow-y);
+    width: var(--arrow-w); overflow: visible;
+  }
+  .dots {
+    position: absolute; top: var(--dots-y);
+    display: flex; gap: var(--dot-gap); align-items: center;
+  }
+  .dot { width: var(--dot); height: var(--dot); border-radius: 20px; background: var(--text-primary); }
+  .dot.active { width: var(--dot-active-w); background: var(--accent); }
+
+  /* ---- cta-card ----
+     Posicao FIXA (regra do Huxley, 22/07/2026): ancorado a 430px do
+     bottom do canvas. Nao segue o fluxo do texto; cresce para cima se
+     a URL quebrar em mais linhas. */
+  .cta-card {
+    left: var(--cta-card-x); bottom: 430px;
+    width: var(--cta-card-w); padding: var(--cta-card-pad);
+  }
+  .cta-card .link {
+    position: relative; z-index: 1;
+    font: var(--cta-font); color: var(--accent);
+    overflow-wrap: break-word;
+  }
+</style>
+</head>
+<body>
+<script>
+/**
+ * window.renderSlide(data) — desenha um slide e devolve a "altura exigida":
+ *   igual à altura do frame quando cabe; frame + estouro quando não cabe.
+ * data: { layout, tags, title, body, items, logos, url, index, total, footerUrl? }
+ */
+window.renderSlide = function (data) {
+  document.body.innerHTML = '';
+  const el = (tag, cls, parent) => {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    (parent ?? document.body).appendChild(n);
+    return n;
+  };
+
+  // pills
+  if (data.tags?.length) {
+    const row = el('div', 'pills');
+    for (const t of data.tags.slice(0, 3)) el('span', 'pill', row).textContent = t;
+  }
+
+  // título
+  const title = el('div', 'title');
+  title.textContent = data.title;
+
+  // corpo por layout
+  let content = null;
+  if (data.layout === 'list') {
+    content = el('ol', 'body');
+    for (const item of data.items ?? []) el('li', null, content).textContent = item;
+  } else if (data.body) {
+    content = el('div', 'body');
+    content.textContent = data.body;
+  }
+
+  // ---- fluxo vertical (regras do Huxley, 22/07/2026) ---------------
+  // 1. O corpo comeca 100px abaixo da BASE do titulo (margin-bottom do
+  //    titulo), nao numa coordenada fixa. Titulo de 1 ou 2 linhas
+  //    produz o mesmo respiro.
+  // 2. Logos da capa e card do cta NAO seguem o fluxo: posicao fixa,
+  //    ancorados a 430px do bottom do canvas (CSS acima).
+  const GAP_TITULO = 100;   // margin-bottom do titulo
+
+  const tituloBottom = title.getBoundingClientRect().bottom;
+  if (content) content.style.top = `${tituloBottom + GAP_TITULO}px`;
+
+  // cover: logos de tool
+  let logosRow = null;
+  if (data.layout === 'cover' && data.logos?.length) {
+    const row = el('div', 'logos');
+    logosRow = row;
+    for (const name of data.logos.slice(0, 4)) {
+      const slot = el('div', 'logo-slot', row);
+      const img = el('img', null, slot);
+      img.src = `logos/${name}.svg`;
+      img.onerror = () => { img.src = `logos/${name}.png`; };
+      // normalizacao optica: LOGO_BOX[name] e a fracao do arquivo que o
+      // conteudo visivel ocupa (gerado por src/measure-logos.mjs).
+      // Escalar por 1/fracao iguala o tamanho aparente de todos.
+      const frac = window.LOGO_BOX?.[name];
+      if (frac && frac < 0.999) img.style.transform = `scale(${(1 / frac).toFixed(4)})`;
+    }
+  }
+
+  // cta: card de vidro com a URL
+  let ctaCard = null;
+  if (data.layout === 'cta') {
+    ctaCard = el('div', 'glass cta-card');
+    el('div', 'link', ctaCard).textContent = data.url ?? '';
+  }
+
+  // footer
+  if (data.layout === 'cover') el('div', 'glass footer-card');
+  const brand = el('img', 'brand');
+  brand.src = 'logos/punkmetrics-white.png';
+  el('div', 'footer-url').textContent = data.footerUrl ?? 'www.punkmetrics.com';
+
+  const arrow = el('div', 'arrow');
+  arrow.innerHTML =
+    '<svg width="47" height="20" viewBox="0 0 47 20" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+    '<path d="M0 10 H45 M37 2 L45 10 L37 18" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  const dots = el('div', 'dots');
+  const total = data.total ?? 4;
+  for (let i = 0; i < total; i++)
+    el('span', i === data.index ? 'dot active' : 'dot', dots);
+  // fileira ancorada à direita em x = 940
+  const dotsW = 42 + (total - 1) * 36;
+  dots.style.left = `calc(var(--dots-right) - ${dotsW}px)`;
+
+  // ---- diagnóstico por campo ---------------------------------------
+  // Cada bloco de texto tem um teto proprio: o topo do que vem depois
+  // dele no frame. Reportar campo a campo permite dizer QUAL texto
+  // encurtar e em quantos px, em vez de um numero unico e inutil.
+  const tok = (n) => parseFloat(getComputedStyle(document.documentElement).getPropertyValue(n));
+  const bottomOf = (n) => (n ? n.getBoundingClientRect().bottom : 0);
+
+  const footerTop = data.layout === 'cover' ? tok('--content-bottom-cover') : tok('--content-bottom');
+
+  // Teto de linhas do corpo. Regras do Huxley (22/07/2026): descricao
+  // vai ate 7 linhas; na capa so 4, porque abaixo dela entram as logos.
+  // Espelhado em template.json > limites.corpo.maxLinhas.
+  const MAX_LINHAS = { cover: 4, text: 7, list: 9, cta: 4 };
+
+  const campos = [];
+  const LH_TITULO = 68.4;
+  const LH_CORPO = 60;
+
+  // titulo: no maximo 3 linhas
+  const linhasTitulo = Math.round(title.getBoundingClientRect().height / LH_TITULO);
+  campos.push({
+    campo: 'title',
+    bottom: bottomOf(title),
+    limite: bottomOf(title) - Math.max(0, linhasTitulo - 3) * LH_TITULO,
+    linhas: linhasTitulo,
+  });
+
+  // corpo: limitado por linhas (regra) e pela geometria. O teto
+  // geometrico e o topo do proximo elemento fixo abaixo: logos na
+  // capa, card do cta no cta, rodape nos demais.
+  if (content) {
+    const linhasCorpo = Math.round(content.getBoundingClientRect().height / LH_CORPO);
+    const maxLinhas = MAX_LINHAS[data.layout] ?? 7;
+    const bottom = bottomOf(content);
+    const limitePorLinhas = bottom - Math.max(0, linhasCorpo - maxLinhas) * LH_CORPO;
+    let tetoGeometrico = footerTop;
+    if (logosRow) tetoGeometrico = logosRow.getBoundingClientRect().top;
+    if (ctaCard) tetoGeometrico = ctaCard.getBoundingClientRect().top;
+    campos.push({
+      campo: data.layout === 'list' ? 'items' : 'body',
+      bottom,
+      limite: Math.min(limitePorLinhas, tetoGeometrico),
+      linhas: linhasCorpo,
+      maxLinhas,
+    });
+  }
+
+  for (const c of campos) {
+    c.excesso = Math.max(0, Math.round(c.bottom - c.limite));
+    c.top = Math.round(c.bottom - (c.linhas || 1) * (c.campo === 'title' ? LH_TITULO : LH_CORPO));
+  }
+
+  const relatorio = {
+    layout: data.layout,
+    campos,
+    excessoTotal: campos.reduce((s, c) => s + c.excesso, 0),
+  };
+  relatorio.cabe = relatorio.excessoTotal === 0;
+
+  window.__relatorio = relatorio;
+  return relatorio;
+};
+</script>
+</body>
+</html>

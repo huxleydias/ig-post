@@ -1,0 +1,14 @@
+{
+  "name": "punkmetrics",
+  "description": "Plugins do Claude Code da PunkMetrics.",
+  "owner": {
+    "name": "Huxley Dias"
+  },
+  "plugins": [
+    {
+      "name": "ig-post",
+      "source": "./",
+      "description": "Carrossel de Instagram (3 a 5 slides 1080x1440 e legenda) a partir de um post WordPress, no template punk-dark da PunkMetrics."
+    }
+  ]
+}
