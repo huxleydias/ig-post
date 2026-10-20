@@ -98,11 +98,17 @@ template nunca é ajustado para caber o texto.
 
 ## Atualização
 
+Dentro do Claude Code:
+
 ```
 /plugin marketplace update punkmetrics
+/plugin update ig-post@punkmetrics
 ```
 
-O setup reinstala as dependências sozinho depois de uma atualização.
+O primeiro comando busca a lista nova do marketplace, o segundo instala a
+versão nova do plugin. Depois reinicie a sessão do Claude Code para ela
+entrar em uso. O setup reinstala as dependências sozinho na primeira
+execução.
 
 ## Problemas comuns
 

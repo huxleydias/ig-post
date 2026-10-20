@@ -9,9 +9,9 @@
  * não components: Code Connect não aceita publish neles. O mapeamento
  * frame→layout do deck.json vive em templates/punk-dark/template.json.
  *
- * Publicar (exige FIGMA_ACCESS_TOKEN com codeconnect:write):
- *   set -a; source ../../.env; set +a
- *   npx figma connect publish
+ * Publicar de dentro de maintainer/ (exige FIGMA_ACCESS_TOKEN com
+ * codeconnect:write no ambiente; veja maintainer/README.md):
+ *   npx @figma/code-connect@1 connect publish
  */
 import figma, { html } from '@figma/code-connect/html'
 

@@ -3,9 +3,9 @@
 Esta pasta é para quem mantém o visual do template. Quem só gera
 carrossel com o `/ig-post` não precisa de nada daqui, nem de Figma.
 
-Rode os comandos a partir da raiz do repositório, com as dependências de
-desenvolvimento instaladas (`npm install`, que traz o
-`@figma/code-connect`).
+Rode os comandos a partir da raiz do repositório, depois de um
+`npm install`. O Code Connect fica fora do `package.json` e roda por
+`npx` (veja Code Connect, abaixo).
 
 ## Fonte da verdade
 
@@ -44,8 +44,35 @@ desenvolvimento instaladas (`npm install`, que traz o
 ### Code Connect
 
 `maintainer/punk-dark.figma.ts` mapeia os components do Figma.
-`figma connect publish` (rodado de dentro de `maintainer/`) exige token
-com escopo Code Connect Write.
+
+O `@figma/code-connect` não entra nas dependências do projeto: o Claude
+Code instala também as devDependencies na cópia de cada usuário, e ele
+sozinho somava uns 100 MB. Rode por `npx`, de dentro de `maintainer/`:
+
+```
+cd maintainer
+npx @figma/code-connect@1 connect parse
+npx @figma/code-connect@1 connect publish
+```
+
+O `parse` confere o mapeamento sem token. O `publish` exige
+`FIGMA_ACCESS_TOKEN` no ambiente, com escopo Code Connect Write. O `@1`
+fixa a versão maior com que o mapeamento foi testado (1.5.3).
+
+## Release
+
+Todo release sobe `version` no `.claude-plugin/plugin.json` (e no
+`package.json`, que acompanha), cria a tag e a release no GitHub. A
+versão do `plugin.json` vira o nome da pasta da cópia instalada em cada
+máquina (`plugins/cache/punkmetrics/ig-post/<version>/`).
+
+```
+npm test
+git commit -am "chore: release vX.Y.Z"
+git tag vX.Y.Z
+git push origin main vX.Y.Z
+gh release create vX.Y.Z --title vX.Y.Z --notes "..."
+```
 
 ## Fluxo vertical
 
