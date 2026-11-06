@@ -1,0 +1,93 @@
+/*
+ * tokens.css: template punkmetrics-ds
+ * Fonte: o DS do site (punkmetrics-ds, kit/ds/00-tokens.css, 03-dark.css,
+ * 06-refino.css e 07-footer.css), levado para o quadro de 1080x1440.
+ * Escala: o quadro aparece com cerca de 0,36 da largura no feed, então os
+ * tamanhos do DS sobem por volta de 2,8x (título 26px de leitura -> 72px).
+ */
+
+@font-face {
+  font-family: 'Zalando Sans';
+  src: url('fonts/zalando-sans-latin.woff2') format('woff2');
+  font-weight: 400 700;
+  font-style: normal;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Zalando Sans';
+  src: url('fonts/zalando-sans-latin-ext.woff2') format('woff2');
+  font-weight: 400 700;
+  font-style: normal;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+:root {
+  /* frame */
+  --frame-w: 1080px;
+  --frame-h: 1440px;
+
+  /* cores do DS */
+  --pm-dark: #000000;          /* superfície escura */
+  --pm-on-dark: #F5F3F1;       /* tinta sobre o preto */
+  --background: #FFFFFF;       /* superfície clara */
+  --muted: #F5F3F1;            /* chip e card cinza */
+  --on-light-forte: #1B1B1B;   /* texto de leitura no claro */
+  --accent: #7B61FF;           /* roxo: ponto do chip, numeral no claro */
+  --accent-soft: #B0A9F1;      /* lilás: card de destaque, numeral no escuro */
+  --primary: #000000;          /* botão */
+
+  /* grade */
+  --margin-x: 96px;
+  --content-w: 888px;
+
+  /* barra do topo: marca à esquerda, contador à direita */
+  --y-topo: 88px;
+  --brand-w: 96px;
+  --brand-h: 64px;
+  --contador-font: 500 26px/64px 'Zalando Sans';
+
+  /* chips (category-chips + ponto do plan-chip) */
+  --y-pills: 232px;
+  --pill-pad: 12px 26px;
+  --pill-font: 600 22px/26px 'Zalando Sans';
+  --pill-tracking: .06em;
+  --pill-gap: 12px;
+  --pill-dot: 10px;
+
+  /* título: peso 500 (teto do DS), tracking negativo, entrelinha display */
+  --y-title: 330px;
+  --title-font: 500 72px/75.6px 'Zalando Sans';
+  --title-tracking: -1.8px;
+  --lh-title: 75.6;
+
+  /* corpo: leitura */
+  --body-font: 400 44px/60px 'Zalando Sans';
+  --lh-body: 60;
+  --gap-titulo: 56px;          /* base do título até o corpo */
+
+  /* lista: numeral à esquerda, item na coluna */
+  --lista-num-w: 76px;
+  --lista-gap: 16px;
+  --lista-num-font: 500 44px/60px 'Zalando Sans';
+
+  /* logos de tool (capa) */
+  --logo-size: 90px;
+  --logo-radius: 24px;
+  --logo-gap: 26px;
+
+  /* card do cta: card-soft do DS */
+  --card-radius: 40px;
+  --cta-card-pad: 44px 44px 44px 52px;
+  --cta-font: 500 40px/52px 'Zalando Sans';
+  --icon-button: 96px;
+
+  /* assinatura PUNKMETRICS do rodapé: só no último slide, inteira na
+     largura do conteúdo (o tamanho da fonte é ajustado em JS para caber) */
+  --wordmark-font: 600 200px/.85 'Zalando Sans';
+  --wordmark-tracking: -0.04em;
+  --wordmark-bottom: 96px;
+  --wordmark-gap: 64px;        /* respiro entre o conteúdo e a assinatura */
+
+  /* limite inferior do conteúdo; no último slide sobe para cima da assinatura */
+  --content-bottom: 1344px;
+}

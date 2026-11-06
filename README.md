@@ -1,10 +1,10 @@
 # ig-post
 
 Plugin do Claude Code que transforma um post de blog WordPress num carrossel
-de Instagram: 3 a 5 imagens 1080x1440 e a legenda, no template punk-dark da
-PunkMetrics. Você passa a URL do post, o Claude escreve o deck respeitando o
-espaço de cada slide, mostra o preview para aprovação e só depois gera os
-PNGs.
+de Instagram: 3 a 5 imagens 1080x1440 e a legenda, no template punkmetrics-ds
+da PunkMetrics, o mesmo visual do site. Você passa a URL do post, o Claude
+escreve o deck respeitando o espaço de cada slide, mostra o preview para
+aprovação e só depois gera os PNGs.
 
 <p>
   <img src="examples/figma-mcp-guia-completo-pt-br/01.png" width="160" alt="Capa">
@@ -70,10 +70,10 @@ A publicação no Instagram é manual. O plugin não posta nada.
 
 ## Como o orçamento de texto funciona
 
-O corpo do slide é Inter 50px numa coluna de 771px. Cabe bem menos texto do
-que parece, e parágrafo de blog colado no slide sempre estoura. Por isso cada
-bloco tem um teto medido no template real: título até ~59 caracteres, corpo
-de slide de texto até ~191, corpo da capa até ~103.
+O corpo do slide é Zalando Sans 44px numa coluna de 888px. Cabe bem menos
+texto do que parece, e parágrafo de blog colado no slide sempre estoura. Por
+isso cada bloco tem um teto medido no template real: título até ~62
+caracteres, corpo de slide de texto até ~262, corpo da capa até ~147.
 
 O `check` roda em duas passagens. A primeira estima linhas pelo número de
 caracteres e roda em milissegundos. A segunda renderiza o slide de verdade e
@@ -87,10 +87,12 @@ template nunca é ajustado para caber o texto.
   em blog instalado em subpasta. Site que não é WordPress, ou que bloqueia o
   `/wp-json`, recebe uma mensagem explicando o que foi tentado.
 - **Permalinks amigáveis.** URLs no formato `?p=123` não são suportadas.
-- **Marca PunkMetrics fixa.** Logo e rodapé `www.punkmetrics.com` fazem
-  parte do template. Veja `NOTICE.md`.
+- **Marca PunkMetrics fixa.** Logo e assinatura PUNKMETRICS fazem parte do
+  template. Veja `NOTICE.md`.
+- **Template anterior.** O `punk-dark`, padrão até a v1.0.1, continua em
+  `templates/punk-dark/`. Peça por nome para usar ele.
 - **Logos de ferramenta.** A capa só usa os logos que existem em
-  `templates/punk-dark/logos/`. Para incluir outro, abra um pull request.
+  `templates/punkmetrics-ds/logos/`. Para incluir outro, abra um pull request.
 - **Abreviação de categoria.** Categorias do seu blog que não estão em
   `config/abreviacoes.json` geram uma sugestão. Para fixar a sua, crie
   `./ig-post/abreviacoes.json` no formato

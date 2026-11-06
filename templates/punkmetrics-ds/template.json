@@ -1,0 +1,44 @@
+{
+  "name": "punkmetrics-ds",
+  "width": 1080,
+  "height": 1440,
+  "layouts": [
+    "cover",
+    "text",
+    "list",
+    "cta"
+  ],
+  "footerUrl": "www.punkmetrics.com",
+  "limites": {
+    "_nota": "Capacidade medida por src/measure.mjs contra o slide.html real. Modelo em linhas: linhas de um bloco = soma de ceil(caracteres / charsPorLinha) por parágrafo ou item. Rode de novo se o design ou a tipografia mudarem.",
+    "titulo": {
+      "charsPorLinha": 28,
+      "maxLinhas": 3,
+      "maxChars": 62
+    },
+    "corpo": {
+      "charsPorLinha": 45,
+      "maxLinhas": {
+        "text": 7,
+        "coverComLogos": 4,
+        "coverSemLogos": 4,
+        "cta": 4
+      },
+      "maxChars": {
+        "text": 262,
+        "coverComLogos": 147,
+        "coverSemLogos": 147,
+        "cta": 147
+      }
+    },
+    "lista": {
+      "charsPorLinha": 41,
+      "maxLinhas": 8,
+      "maxChars": 225
+    },
+    "url": {
+      "_nota": "Fixado manualmente: o measure.mjs não mede a URL (o card cresce para cima). Cerca de 3 linhas de ~33 chars no card, sem o https:// que o slide esconde. A colisão real com o corpo é pega pela passagem 2 do check.",
+      "maxChars": 104
+    }
+  }
+}

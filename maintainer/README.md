@@ -1,4 +1,21 @@
-# Manutenção do template punk-dark
+# Manutenção dos templates
+
+O template padrão é o `punkmetrics-ds`, levado do DS do site para o quadro
+de 1080x1440 (origem dos tokens no cabeçalho de
+`templates/punkmetrics-ds/tokens.css`). Os scripts de medição recebem o
+template por argumento:
+
+```
+node maintainer/measure.mjs punkmetrics-ds
+node maintainer/measure-logos.mjs --template punkmetrics-ds
+```
+
+Sem argumento eles medem o `punk-dark`. Depois de medir o `punkmetrics-ds`,
+atualize a tabela do `skills/ig-post/SKILL.md`: o `test/skill.test.mjs`
+confere os números contra o `template.json` dele.
+
+O resto deste arquivo trata do `punk-dark`, o template anterior, que tem
+fonte da verdade no Figma.
 
 Esta pasta é para quem mantém o visual do template. Quem só gera
 carrossel com o `/ig-post` não precisa de nada daqui, nem de Figma.

@@ -1,6 +1,6 @@
 ---
 name: ig-post
-description: Gera carrossel de Instagram (3 a 5 imagens 1080x1440 e legenda) a partir da URL de um post WordPress, no template punk-dark da PunkMetrics. Use quando pedirem /ig-post <url>, carrossel de um artigo, ou desdobrar post de blog para Instagram.
+description: Gera carrossel de Instagram (3 a 5 imagens 1080x1440 e legenda) a partir da URL de um post WordPress, no template punkmetrics-ds da PunkMetrics. Use quando pedirem /ig-post <url>, carrossel de um artigo, ou desdobrar post de blog para Instagram.
 ---
 
 # ig-post: carrossel de Instagram a partir de post de blog
@@ -13,30 +13,37 @@ O template define SÓ o visual (dimensões, cores, fontes, posições, logo e
 rodapé da PunkMetrics). Todo conteúdo é variável por post, inclusive o texto
 do CTA. Nenhum slide tem texto fixo.
 
+Template padrão: `punkmetrics-ds`, o visual do site da PunkMetrics. O
+`punk-dark` continua no plugin e só entra se o usuário pedir por nome;
+nesse caso valem os limites de
+`${CLAUDE_PLUGIN_ROOT}/templates/punk-dark/template.json`, não a tabela
+abaixo.
+
 Fonte do conteúdo: qualquer blog WordPress com REST público
 (`/wp-json/wp/v2`). Site que não é WordPress, ou com REST bloqueado, o
 extract recusa com mensagem clara: repasse a mensagem e pare.
 
 ## Guardrail de texto: leia isto antes de escrever qualquer slide
 
-**O detrator principal é texto longo.** O corpo é Inter 50px numa coluna
-de 771px: cabe muito menos do que a intuição sugere. Escrever um
+**O detrator principal é texto longo.** O corpo é Zalando Sans 44px numa
+coluna de 888px: cabe muito menos do que a intuição sugere. Escrever um
 parágrafo de blog e colar no slide estoura o frame, sempre.
 
 Orçamento por bloco (medido contra o `slide.html` real, fonte:
-`${CLAUDE_PLUGIN_ROOT}/templates/punk-dark/template.json` > `limites`):
+`${CLAUDE_PLUGIN_ROOT}/templates/punkmetrics-ds/template.json` > `limites`):
 
 | Bloco | Cabe | Na prática |
 |---|---|---|
-| `title` (todos os layouts) | 3 linhas de ~27 chars | **até ~59 caracteres** |
-| `body` do `cover` | 4 linhas | **até ~103 caracteres** |
-| `body` do `text` | 7 linhas | **até ~191 caracteres** |
-| `body` do `cta` | 4 linhas | **até ~103 caracteres** |
-| `items` do `list` (soma) | 7 linhas | **até ~165 caracteres no total** |
-| `url` do `cta` | 2 linhas | **até ~112 caracteres** |
+| `title` (todos os layouts) | 3 linhas de ~28 chars | **até ~62 caracteres** |
+| `body` do `cover` | 4 linhas | **até ~147 caracteres** |
+| `body` do `text` | 7 linhas | **até ~262 caracteres** |
+| `body` do `cta` | 4 linhas | **até ~147 caracteres** |
+| `items` do `list` (soma) | 8 linhas | **até ~225 caracteres no total** |
+| `url` do `cta` | 3 linhas | **até ~104 caracteres** |
 
 Tetos do template, que valem acima da geometria:
-- **Descrição: 7 linhas no máximo.** Acima disso conflita com o rodapé.
+- **Descrição: 7 linhas no máximo.** Acima disso passa do limite inferior
+  do conteúdo.
 - **Capa: 4 linhas no máximo**, porque logo abaixo entram os logos.
 
 Regras de escrita que decorrem disso:
@@ -46,7 +53,7 @@ Regras de escrita que decorrem disso:
   encurtar SEM mudar o sentido, ver "Fidelidade ao texto".
 - Corpo **não é** o parágrafo do post. Extraia a ideia em 1 ou 2 frases.
 - Item de lista: uma ação por item, sem subordinada. Com 4 items, cada um
-  tem ~40 caracteres de orçamento.
+  tem ~55 caracteres de orçamento.
 - A capa com logos é o bloco mais apertado do carrossel. Se o lead não
   couber, tire os logos ou encurte mais.
 
@@ -56,12 +63,12 @@ O carrossel é desdobramento do artigo, não uma releitura. O texto do post
 é a fonte. Inventar frase nova descaracteriza o artigo.
 
 **Capa: o título é o título do post, sempre.** Sem reescrita, sem
-"melhoria", sem encurtar por gosto. Só encurta se estourar 59 caracteres,
+"melhoria", sem encurtar por gosto. Só encurta se estourar 62 caracteres,
 e nesse caso cortando palavras do próprio título (preservando o sentido),
 avisando o usuário do corte na entrega.
 
 **Miolo: o título sai do H2 da seção.** Ordem de preferência:
-1. H2 literal, se couber nos 59 caracteres.
+1. H2 literal, se couber nos 62 caracteres.
 2. H2 com palavras removidas do começo ou do fim, sentido intacto.
 3. Só em último caso, reescrita própria, e avisar o usuário que reescreveu.
 
@@ -105,7 +112,7 @@ ou a afirmação original, só remove a subordinada e a alternativa.
    nomear tudo daqui em diante.
 
 2. **Escrever o deck** respeitando o orçamento acima. Salvar em
-   `./ig-post/<slug>/deck.json` com `template: "punk-dark"`,
+   `./ig-post/<slug>/deck.json` com `template: "punkmetrics-ds"`,
    `source: <url do post>`, `slug`, `slides`, `caption` e `hashtags`
    (contrato em `${CLAUDE_PLUGIN_ROOT}/src/deck.schema.json`).
    Se o projeto do usuário define um skill de voz ou de copy (por exemplo,
@@ -174,7 +181,7 @@ ou a afirmação original, só remove a subordinada e a alternativa.
 
 1. **Capa** (obrigatória): título = H1 do post, literal (ver "Fidelidade
    ao texto"); lead reescrito curto; logos = ferramentas citadas no post
-   que existam em `${CLAUDE_PLUGIN_ROOT}/templates/punk-dark/logos/`
+   que existam em `${CLAUDE_PLUGIN_ROOT}/templates/punkmetrics-ds/logos/`
    (nome do arquivo sem extensão, até 4). Logo que não existe ali não
    entra; logo novo entra por pull request no repositório do plugin.
 2. **Miolo, 1 a 3 slides**: cada H2 forte vira um slide, com o próprio H2

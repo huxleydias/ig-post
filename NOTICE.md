@@ -7,15 +7,15 @@ no arquivo `LICENSE`.
 
 ## Marca PunkMetrics
 
-O nome PunkMetrics, o logo (`templates/punk-dark/logos/punkmetrics-*.png`)
-e a identidade visual do template punk-dark pertencem a Huxley Dias /
-PunkMetrics e **não** estão cobertos pela licença MIT. O template vem com a
-marca para gerar carrosséis da PunkMetrics e de quem tem autorização para
+O nome PunkMetrics, o logo (`templates/*/logos/punkmetrics-*`) e a
+identidade visual dos templates punkmetrics-ds e punk-dark pertencem a
+Huxley Dias / PunkMetrics e **não** estão cobertos pela licença MIT. Os
+templates vêm com a marca para gerar carrosséis da PunkMetrics e de quem tem autorização para
 usá-la. Para outra marca, troque logo, rodapé e cores num fork.
 
 ## Logos de ferramentas
 
-Os logos em `templates/punk-dark/logos/` (Figma, Notion, Slack, Chrome e os
+Os logos em `templates/*/logos/` (Figma, Notion, Slack, Chrome e os
 demais) são marcas dos respectivos donos. Aparecem só para identificar a
 ferramenta citada no post, sem sugerir parceria ou endosso.
 
@@ -25,3 +25,5 @@ ferramenta citada no post, sem sugerir parceria ou endosso.
   (`templates/punk-dark/fonts/OFL-Inter.txt`).
 - Roboto: Copyright 2011 The Roboto Project Authors, SIL Open Font License
   1.1 (`templates/punk-dark/fonts/OFL-Roboto.txt`).
+- Zalando Sans: Copyright The Zalando Sans Project Authors, SIL Open Font
+  License 1.1 (`templates/punkmetrics-ds/fonts/OFL-ZalandoSans.txt`).

@@ -1,6 +1,6 @@
 {
   "name": "ig-post",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Carrossel de Instagram a partir de um post WordPress, como plugin do Claude Code.",
   "type": "module",
   "private": true,

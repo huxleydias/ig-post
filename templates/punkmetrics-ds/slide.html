@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>punkmetrics-ds slide</title>
+<link rel="preload" href="fonts/zalando-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="tokens.css">
+<script src="logo-box.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: var(--frame-w); height: var(--frame-h); }
+  body { overflow: hidden; position: relative; font-family: 'Zalando Sans', sans-serif; }
+
+  /* ---- superfície: o contrato do DS ----
+     Escuro é superfície, não tema: cada slide declara os papéis de texto.
+     Os slides alternam preto e branco como as seções do site. */
+  body.escuro {
+    background: var(--pm-dark);
+    --fg: var(--pm-on-dark);
+    --fg-corpo: color-mix(in srgb, var(--pm-on-dark) 85%, transparent);
+    --fg-meta: color-mix(in srgb, var(--pm-on-dark) 70%, transparent);
+    --chip-bg: color-mix(in srgb, var(--pm-on-dark) 12%, transparent);
+    --ponto: var(--accent-soft);
+  }
+  body.claro {
+    background: var(--background);
+    --fg: var(--on-light-forte);
+    --fg-corpo: var(--on-light-forte);
+    --fg-meta: color-mix(in srgb, var(--on-light-forte) 65%, transparent);
+    --chip-bg: var(--muted);
+    --ponto: var(--accent);
+  }
+
+  /* ---- grão de filme (06-refino §22), parado: em multiply aparece no
+     claro e some no preto ---- */
+  .grao {
+    position: absolute; inset: 0; pointer-events: none; z-index: 5;
+    opacity: .5; mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.3'/%3E%3C/svg%3E");
+  }
+
+  /* ---- barra do topo ---- */
+  .brand {
+    position: absolute; left: var(--margin-x); top: var(--y-topo);
+    width: var(--brand-w); height: var(--brand-h);
+  }
+  .contador {
+    position: absolute; right: var(--margin-x); top: var(--y-topo);
+    font: var(--contador-font); letter-spacing: .04em;
+    color: var(--fg-meta); font-variant-numeric: tabular-nums;
+  }
+
+  /* ---- chips: category-chips do DS, com o ponto do plan-chip no primeiro ---- */
+  .pills {
+    position: absolute; left: var(--margin-x); top: var(--y-pills);
+    display: flex; gap: var(--pill-gap);
+  }
+  .pill {
+    display: inline-flex; align-items: center; gap: 12px;
+    padding: var(--pill-pad); border-radius: 999px;
+    background: var(--chip-bg); color: var(--fg);
+    font: var(--pill-font); letter-spacing: var(--pill-tracking);
+    text-transform: uppercase; white-space: nowrap;
+  }
+  .pill:first-child::before {
+    content: ""; width: var(--pill-dot); height: var(--pill-dot);
+    border-radius: 50%; background: var(--ponto);
+  }
+
+  /* ---- título ---- */
+  .title {
+    position: absolute; left: var(--margin-x); top: var(--y-title);
+    width: var(--content-w);
+    font: var(--title-font); letter-spacing: var(--title-tracking);
+    color: var(--fg);
+  }
+
+  /* ---- corpo (lead, texto, corpo do cta) ----
+     top definido em JS: --gap-titulo abaixo da base do título. */
+  .body {
+    position: absolute; left: var(--margin-x);
+    width: var(--content-w);
+    font: var(--body-font); color: var(--fg-corpo);
+    white-space: pre-line;
+  }
+
+  /* ---- lista: numeral do DS (.01) na coluna da esquerda ---- */
+  ol.body { list-style: none; display: flex; flex-direction: column; gap: var(--lista-gap); white-space: normal; }
+  ol.body li { display: grid; grid-template-columns: var(--lista-num-w) minmax(0, 1fr); }
+  ol.body .num { font: var(--lista-num-font); color: var(--ponto); font-variant-numeric: tabular-nums; }
+  ol.body .txt { min-width: 0; }
+
+  /* ---- logos de tool (capa): posição fixa, base no limite do conteúdo ---- */
+  .logos {
+    position: absolute; left: var(--margin-x);
+    top: calc(var(--content-bottom) - var(--logo-size));
+    display: flex; gap: var(--logo-gap);
+  }
+  .logo-slot {
+    flex: 0 0 auto;
+    width: var(--logo-size); height: var(--logo-size);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .logos img {
+    width: 100%; height: 100%;
+    border-radius: var(--logo-radius); object-fit: contain;
+  }
+
+  /* ---- cta: card-soft do DS (lilás, tinta preta) com o botão de ícone ----
+     Posição fixa: a base fica no limite do conteúdo e o card cresce para
+     cima se a URL quebrar em mais linhas. */
+  .cta-card {
+    position: absolute; left: var(--margin-x); width: var(--content-w);
+    bottom: calc(var(--frame-h) - var(--content-bottom));
+    padding: var(--cta-card-pad); border-radius: var(--card-radius);
+    background: var(--accent-soft); color: #000;
+    display: flex; align-items: center; gap: 32px;
+  }
+  .cta-card .link {
+    flex: 1 1 auto; min-width: 0;
+    font: var(--cta-font); letter-spacing: -0.5px;
+    overflow-wrap: anywhere;
+  }
+  .icon-button {
+    flex: 0 0 auto; width: var(--icon-button); height: var(--icon-button);
+    border-radius: 50%; background: var(--primary);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .icon-button svg { width: 40px; height: 40px; transform: rotate(-45deg); }
+
+  /* ---- assinatura PUNKMETRICS (07-footer): fecha o carrossel, só no
+     último slide, com a palavra inteira na largura do conteúdo ---- */
+  .wordmark {
+    position: absolute; left: var(--margin-x); bottom: var(--wordmark-bottom);
+    font: var(--wordmark-font); letter-spacing: var(--wordmark-tracking);
+    white-space: nowrap; color: var(--fg);
+  }
+
+  /* aquece a fonte antes do load: sem isso a primeira medição sai na
+     fonte de fallback */
+  .aquece { position: absolute; left: -9999px; top: 0; font-family: 'Zalando Sans'; }
+</style>
+</head>
+<body class="escuro">
+<div class="aquece" aria-hidden="true">
+  <span style="font-weight:400">Aquece é ção ã</span>
+  <span style="font-weight:500">Aquece é ção ã</span>
+  <span style="font-weight:600">PUNKMETRICS</span>
+</div>
+<script>
+/**
+ * window.renderSlide(data): desenha um slide e devolve o relatório de
+ * encaixe por campo (mesmo contrato do punk-dark).
+ * data: { layout, tags, title, body, items, logos, url, index, total }
+ */
+window.renderSlide = function (data) {
+  document.body.innerHTML = '';
+  const el = (tag, cls, parent) => {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    (parent ?? document.body).appendChild(n);
+    return n;
+  };
+
+  const index = data.index ?? 0;
+  const total = data.total ?? 4;
+  const escuro = index % 2 === 0;
+  document.body.className = escuro ? 'escuro' : 'claro';
+
+  el('div', 'grao');
+
+  // barra do topo
+  const brand = el('img', 'brand');
+  brand.src = escuro ? 'logos/punkmetrics-ds-claro.svg' : 'logos/punkmetrics-ds-escuro.svg';
+  const dois = (n) => String(n).padStart(2, '0');
+  el('div', 'contador').textContent = `${dois(index + 1)} / ${dois(total)}`;
+
+  // chips
+  if (data.tags?.length) {
+    const row = el('div', 'pills');
+    for (const t of data.tags.slice(0, 3)) el('span', 'pill', row).textContent = t;
+  }
+
+  // título
+  const title = el('div', 'title');
+  title.textContent = data.title;
+
+  // corpo por layout
+  let content = null;
+  const itens = [];
+  if (data.layout === 'list') {
+    content = el('ol', 'body');
+    (data.items ?? []).forEach((item, i) => {
+      const li = el('li', null, content);
+      el('span', 'num', li).textContent = `.${dois(i + 1)}`;
+      const txt = el('span', 'txt', li);
+      txt.textContent = item;
+      itens.push(txt);
+    });
+  } else if (data.body) {
+    content = el('div', 'body');
+    content.textContent = data.body;
+  }
+
+  const css = getComputedStyle(document.documentElement);
+  const tok = (n) => parseFloat(css.getPropertyValue(n));
+  const GAP_TITULO = tok('--gap-titulo');
+
+  // assinatura: só no último slide. A fonte escala até a palavra ocupar a
+  // largura do conteúdo, sem cortar letra. O limite do conteúdo sobe para
+  // cima dela, e o card do cta acompanha pelo --content-bottom.
+  let contentBottom = tok('--content-bottom');
+  if (index === total - 1) {
+    const wm = el('div', 'wordmark');
+    wm.textContent = 'PUNKMETRICS';
+    const base = parseFloat(getComputedStyle(wm).fontSize);
+    wm.style.fontSize = `${(base * tok('--content-w')) / wm.getBoundingClientRect().width}px`;
+    contentBottom = wm.getBoundingClientRect().top - tok('--wordmark-gap');
+    document.body.style.setProperty('--content-bottom', `${contentBottom}px`);
+  }
+  const tituloBottom = title.getBoundingClientRect().bottom;
+  if (content) content.style.top = `${tituloBottom + GAP_TITULO}px`;
+
+  // capa: logos de tool
+  let logosRow = null;
+  if (data.layout === 'cover' && data.logos?.length) {
+    logosRow = el('div', 'logos');
+    for (const name of data.logos.slice(0, 4)) {
+      const slot = el('div', 'logo-slot', logosRow);
+      const img = el('img', null, slot);
+      img.src = `logos/${name}.svg`;
+      img.onerror = () => { img.src = `logos/${name}.png`; };
+      const frac = window.LOGO_BOX?.[name];
+      if (frac && frac < 0.999) img.style.transform = `scale(${(1 / frac).toFixed(4)})`;
+    }
+  }
+
+  // cta: card lilás com a URL e o botão de ícone
+  let ctaCard = null;
+  if (data.layout === 'cta') {
+    ctaCard = el('div', 'cta-card');
+    el('div', 'link', ctaCard).textContent = (data.url ?? '').replace(/^https?:\/\//, '');
+    el('div', 'icon-button', ctaCard).innerHTML =
+      '<svg viewBox="0 0 24 24" fill="none" stroke="#F5F3F1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+      '<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
+  }
+
+  // ---- diagnóstico por campo ---------------------------------------
+  // Teto de linhas do corpo: descrição até 7; capa e cta só 4.
+  const MAX_LINHAS = { cover: 4, text: 7, list: 8, cta: 4 };
+  const LH_TITULO = tok('--lh-title');
+  const LH_CORPO = tok('--lh-body');
+  const bottomOf = (n) => (n ? n.getBoundingClientRect().bottom : 0);
+  const campos = [];
+
+  // título: no máximo 3 linhas
+  const linhasTitulo = Math.round(title.getBoundingClientRect().height / LH_TITULO);
+  campos.push({
+    campo: 'title',
+    bottom: bottomOf(title),
+    limite: bottomOf(title) - Math.max(0, linhasTitulo - 3) * LH_TITULO,
+    linhas: linhasTitulo,
+  });
+
+  // corpo: teto por linhas e teto geométrico (logos na capa, card no
+  // cta, assinatura nos demais, sempre com o respiro do título)
+  if (content) {
+    const linhasCorpo = itens.length
+      ? itens.reduce((s, t) => s + Math.round(t.getBoundingClientRect().height / LH_CORPO), 0)
+      : Math.round(content.getBoundingClientRect().height / LH_CORPO);
+    const maxLinhas = MAX_LINHAS[data.layout] ?? 7;
+    const bottom = bottomOf(content);
+    const limitePorLinhas = bottom - Math.max(0, linhasCorpo - maxLinhas) * LH_CORPO;
+    let tetoGeometrico = contentBottom;
+    if (logosRow) tetoGeometrico = logosRow.getBoundingClientRect().top - GAP_TITULO;
+    if (ctaCard) tetoGeometrico = ctaCard.getBoundingClientRect().top - GAP_TITULO;
+    campos.push({
+      campo: data.layout === 'list' ? 'items' : 'body',
+      bottom,
+      limite: Math.min(limitePorLinhas, tetoGeometrico),
+      linhas: linhasCorpo,
+      maxLinhas,
+      top: Math.round(content.getBoundingClientRect().top),
+    });
+  }
+
+  for (const c of campos) {
+    c.excesso = Math.max(0, Math.round(c.bottom - c.limite));
+    if (c.top == null) c.top = Math.round(c.bottom - (c.linhas || 1) * (c.campo === 'title' ? LH_TITULO : LH_CORPO));
+  }
+
+  const relatorio = {
+    layout: data.layout,
+    campos,
+    excessoTotal: campos.reduce((s, c) => s + c.excesso, 0),
+  };
+  relatorio.cabe = relatorio.excessoTotal === 0;
+
+  window.__relatorio = relatorio;
+  return relatorio;
+};
+</script>
+</body>
+</html>

@@ -26,6 +26,7 @@ test('lista decks da pasta --out e serve o template do plugin', async () => {
   try {
     assert.deepEqual(await (await fetch(url + 'api/decks')).json(), ['meu-post']);
     assert.equal((await fetch(url + 'template/punk-dark/slide.html')).status, 200);
+    assert.equal((await fetch(url + 'template/punkmetrics-ds/slide.html')).status, 200);
   } finally { p.kill(); }
 });
 
